@@ -12,10 +12,10 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def generate_images(description: str, num_of_images: int):
     img_response = client.images.generate(
-        model="dall-e-3"
+        model="dall-e-3",
         prompt=description,
-        size="1024x1024"
-        quality="standard"
+        size="1024x1024",
+        quality="standard",
         n=1
     )
 
@@ -36,3 +36,4 @@ generate_btn = st.button("Generate Images")
 
 if generate_btn:
     generated_img = generate_images(img_description, num_of_images)
+    st.image(generated_img)
