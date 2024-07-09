@@ -37,11 +37,11 @@ def generate_images(description: str, num_of_images: int):
             base64_encoded_image = base64.b64encode(image_data).decode('utf-8')
             image_url = f"data:image/png;base64,{base64_encoded_image}"
         
-        image_dict = dict({
+        image_dict = {
             "title": f"Image {i+1}",
             "text": description,
             "img": image_url
-        })
+        }
 
         images.append(image_dict)
     return images
