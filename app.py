@@ -1,26 +1,30 @@
+import requests
 import os
+import io
 
 import streamlit as st
 
-from openai import OpenAI
 from PIL import Image
 from dotenv import load_dotenv
 load_dotenv()
 
-# initialize client
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+API_URL = "https://api-inference.huggingface.co/models/ehristoforu/dalle-3-xl-v2"
+headers = {"Authorization": f"Bearer {os.getenv('HUGGINGFACE_API_KEY')}"}
+
+def query(payload):
+	response = requests.post(API_URL, headers=headers, json=payload)
+	return response.content
 
 def generate_images(description: str, num_of_images: int):
-    img_response = client.images.generate(
-        model="dall-e-3",
-        prompt=description,
-        size="1024x1024",
-        quality="standard",
-        n=1
-    )
+    image_bytes = query({
+        "inputs": description,
+        "parameters": {
+            "num_return_sequences": num_of_images
+        }
+    })
 
-    img_url = img_response.data[0].url
-    return img_url
+    image = Image.open(io.BytesIO(image_bytes))
+    return image
 
 # set page config
 st.set_page_config(page_title="DALL-E Image Generator", page_icon=":camera:")
